@@ -26,9 +26,12 @@ jobs:
     name: "Preview"
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout repository"
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: "Setup terraform"
+      - name: Setup terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
+      - name: Terraform format
+        run: |
+          terraform fmt -check
