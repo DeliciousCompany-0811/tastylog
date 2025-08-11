@@ -35,7 +35,6 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
-          terraform_wrapper: true
       - name: Terraform format
         run: |
           terraform fmt -check
@@ -51,6 +50,7 @@ jobs:
         run: |
           terraform validate -no-color
       - name: Terraform plan
+        id: plan
         run: |
           terraform plan \
             -var 'project=${{ env.TF_PROJECT }}' \
@@ -60,3 +60,6 @@ jobs:
             -input=false \
             -no-color \
             -detailed-exitcode
+      - name: Terraform plan exitcode check
+        if: ${{ steps.plan.outputs.exitcode == 2 }}
+        run: exit 1
